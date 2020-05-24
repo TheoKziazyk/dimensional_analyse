@@ -11,8 +11,8 @@ from tkinter import filedialog
 import os
 import pandas as pd
 
-OUTPUT_CSV = 'csv/1-2.csv'
-OUTPUT_TEX = 'pdf/1-2.tex'
+OUTPUT_CSV = 'csv/1-1.csv'
+OUTPUT_TEX = 'pdf/1-1.tex'
 
 def open_data(file_path):
     """ read a csv file, return a dataframe """
@@ -124,5 +124,5 @@ save_file(df, OUTPUT_CSV)
 file = open(OUTPUT_TEX, "x") # "x" pour la création et l'écriture
 file.write(''.join((START, BODY, END)))
 file.close()
-os.system(''.join(("pdflatex ", OUTPUT_TEX)))
+os.system(''.join(("pdflatex -output-directory=pdf ", OUTPUT_TEX)))
 os.system(''.join(("xdg-open ", OUTPUT_TEX[:-4], ".pdf")))
