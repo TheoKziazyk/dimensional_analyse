@@ -11,8 +11,8 @@ from tkinter import filedialog
 import os
 import pandas as pd
 
-OUTPUT_CSV = '1-2.csv'
-OUTPUT_TEX = '1-2.tex'
+OUTPUT_CSV = 'csv/1-2.csv'
+OUTPUT_TEX = 'pdf/1-2.tex'
 
 def open_data(file_path):
     """ read a csv file, return a dataframe """
@@ -60,7 +60,7 @@ def start_doc():
     s = "\\documentclass[12pt,a4paper,french,twocolumn]{article}\n\\usepackage[utf8]{inputenc}\n\\usepackage[T1]{fontenc}\n"
     s = ''.join((s,
                  preambule('amsmath', 'lmodern', 'babel', 'booktabs',
-                           'geometry', 'adjustbox', 'multicol',),
+                           'geometry', 'adjustbox',),
                  "\geometry{hmargin=1cm,vmargin=1cm}\n\\begin{document}\n"))
     return s
 
@@ -107,7 +107,6 @@ for i in range(df.shape[0]):
     df = transform_column(df, i, df.index, df[df.columns[i]])
 df = df.round(2)
 print(df)
-save_file(df, OUTPUT_CSV)
 START = start_doc()
 END = end_doc()
 BODY = ''.join(('\n\\begin{table}\n\\begin{adjustbox}{angle=90}\n',
@@ -115,8 +114,13 @@ BODY = ''.join(('\n\\begin{table}\n\\begin{adjustbox}{angle=90}\n',
                 '\\end{adjustbox}\n\\end{table}\n'))
 for i in range(df.shape[1]-df.shape[0]):
     BODY = ''.join((BODY, get_adi_number(df, BODY, i)))
+if os.path.exists('pdf') is False:
+    os.system(' '.join(('mkdir', 'pdf')))
+if os.path.exists('csv') is False:
+    os.system(' '.join(('mkdir', 'csv')))
 if os.path.exists(OUTPUT_TEX):
     os.remove(OUTPUT_TEX)
+save_file(df, OUTPUT_CSV)
 file = open(OUTPUT_TEX, "x") # "x" pour la création et l'écriture
 file.write(''.join((START, BODY, END)))
 file.close()
